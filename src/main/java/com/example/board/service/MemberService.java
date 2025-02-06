@@ -4,6 +4,7 @@ import com.example.board.dto.MemberResponseDto;
 import com.example.board.dto.SignupResponseDto;
 import com.example.board.entity.Member;
 import com.example.board.repositoy.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,18 @@ public class MemberService {
         Member findMember = optionalMember.get();
 
         return new MemberResponseDto(findMember.getId(), findMember.getUsername(), findMember.getAge());
+    }
+
+    @Transactional
+    public void updatePassword (Long id, String oldPassword, String newPassword) {
+
+        Member findMember = memberRepository.findByIdOrElseThrow(id);
+
+        if (!findMember.getPassword().equals(oldPassword)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
+
+        findMember.updatePassword(newPassword);
     }
 
 
