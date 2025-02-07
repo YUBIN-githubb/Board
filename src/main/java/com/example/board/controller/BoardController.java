@@ -1,15 +1,15 @@
 package com.example.board.controller;
 
+import com.example.board.dto.BoardResponseDto;
 import com.example.board.dto.CreateBoardRequestDto;
 import com.example.board.dto.CreateBoardResponseDto;
 import com.example.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/boards")
@@ -27,5 +27,12 @@ public class BoardController {
 
         CreateBoardResponseDto createBoardResponseDto = new CreateBoardResponseDto(savedBoard.getId(), savedBoard.getTitle(), savedBoard.getContents());
         return new ResponseEntity<>(createBoardResponseDto, HttpStatus.CREATED);
+    }
+
+    //게시물 전체 조회
+    @GetMapping
+    public ResponseEntity<List<BoardResponseDto>> findAll () {
+        List<BoardResponseDto> allBoard = boardService.findAll();
+        return new ResponseEntity<>(allBoard, HttpStatus.OK);
     }
 }
